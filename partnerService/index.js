@@ -20,7 +20,7 @@ partners.get('/search/:query', async function(req, res){
   res.send(result) 
 })
 
-partners.post('/add', function(req, res){
+partners.post('/add', async function(req, res){
   const data = {name:'', industry:'', phone_number:'', email:'', img_url:''} 
   data.id = crypto.createHmac('sha256', secret).update(req.body.name).digest('hex');
   data.name = req.body.name;
@@ -32,18 +32,6 @@ partners.post('/add', function(req, res){
   let result = await partnerRepository.insertOne(data);
 
   res.send(result)
-
-  MongoClient.connect('mongodb://localhost:27017', function (err, client) {
-    if (err) throw err
-
-    var db = client.db('partners')
-
-    db.collection('partners').insertOne(data, function (err, result) {
-      if (err) throw err
-
-      res.send(data);
-    })
-  })
 
 })
 
